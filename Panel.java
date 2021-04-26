@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 public class Panel extends JPanel {
     private int  x , y ;
     private BufferedImage img;
-
+    private ArrayList<Poligono> poligonos; 
     public void graficar(ArrayList<Punto> puntos, int grosor ){
 
         for(int i =0 ; i < puntos.size() ; i++){
@@ -16,11 +16,29 @@ public class Panel extends JPanel {
         }
        
     }
-   
+
+    void graficarPoligono(Poligono p ){
+
+        ArrayList<Punto> arr = p.getVertices();
+        for(int i = 0 ; i < arr.size()-1 ;  i++){
+            Bresenham dda = new Bresenham();
+
+            System.out.println("pasó");
+            ArrayList<Punto> linea = dda.calcular (arr.get(i).getX() ,arr.get(i).getY() ,arr.get(i+1).getX() ,arr.get(i+1).getY()  );
+            for(Punto pp: linea )
+            System.out.println(pp);
+            graficar(linea , 10 );
+        }
+
+
+
+    }
+
    public void setPunto(int x  , int y ,int grosor ){
 
       for(int i = x-(grosor/2) ; i <= x+(grosor/2); i++) 
         for(int j = y -(grosor/2) ; j <= y +(grosor/2); j++)
+            if(i >= 0  && i < x && j > 0 && j < y )
             img.setRGB(i,j,new Color(0, 0, 0).getRGB());
         repaint();
     }

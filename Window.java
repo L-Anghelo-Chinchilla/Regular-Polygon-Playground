@@ -158,7 +158,14 @@ public class Window extends JFrame implements MouseListener{
        
        pan.limpiar();
        pan.repaint();
-
+       System.out.println("noooo ctm");
+       Poligono  p  = new Poligono(
+           new Punto (200,200), 
+           new Punto (300,300),
+           grosor.getValue()
+           );
+           pan.graficarPoligono(p );
+           pan.repaint();
     }
 
   public void mouseClicked(MouseEvent e) {  
@@ -218,6 +225,7 @@ public class Window extends JFrame implements MouseListener{
        
     }
 
+  
  
     void segmentar(ArrayList<Punto> arr , int segmento , int espacio){
         int inicio  = segmento, fin  = espacio; 
