@@ -55,7 +55,7 @@ public class Window extends JFrame implements MouseListener{
         xn.setPreferredSize(new java.awt.Dimension(50, 25));
         yn.setPreferredSize(new java.awt.Dimension(50, 25));
 
-         int MIN = 1;
+         int MIN = -31;
         int MAX = 31;
         int INIT = 2;    
 

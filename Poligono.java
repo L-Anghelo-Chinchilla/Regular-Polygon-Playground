@@ -6,6 +6,7 @@ public class Poligono {
         pivote = p ;
         centro   = c ; 
         lados = l ; 
+        radio = centro.distanciaCon(pivote);
         vertices = new ArrayList<Punto>();
        // vertices.add(pivote);
        
@@ -34,8 +35,11 @@ public class Poligono {
     Punto getPivote(){return pivote;}
     Punto getCentro(){return centro;}
     int getLados(){return lados;}
+
+    
     ArrayList<Punto> getVertices(){return vertices;}
     private ArrayList<Punto> vertices;
     private Punto centro, pivote; 
     private int lados;
+    private double radio;
 }
