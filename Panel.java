@@ -23,10 +23,7 @@ public class Panel extends JPanel {
         for(int i = 0 ; i < arr.size()-1 ;  i++){
             Bresenham dda = new Bresenham();
 
-            System.out.println("pasó");
             ArrayList<Punto> linea = dda.calcular (arr.get(i).getX() ,arr.get(i).getY() ,arr.get(i+1).getX() ,arr.get(i+1).getY()  );
-            for(Punto pp: linea )
-            System.out.println(pp);
             graficar(linea , 10 );
         }
 
@@ -53,7 +50,7 @@ public class Panel extends JPanel {
      
        this.x = x ; 
        this.y = y ; 
-       this.img  = new BufferedImage(x,y,BufferedImage.TYPE_BYTE_GRAY );
+       this.img  = new BufferedImage(x,y,BufferedImage.TYPE_INT_ARGB  );
        limpiar();
 
     }
