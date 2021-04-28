@@ -37,24 +37,24 @@ public class Window extends JFrame implements MouseListener{
     xn = new JTextField();
  
         
-        int MIN = -31;
-        int MAX = 31;
-        int INIT = 2;    
+        int MIN = -180;
+        int MAX = 180;
+        int INIT = 0;    
         
         sliderX = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
-        sliderY = new JSlider(JSlider.HORIZONTAL, MIN, MAX, INIT);
+        sliderY = new JSlider(JSlider.HORIZONTAL, 1, 10, 1);
         
-        sliderX.setMajorTickSpacing(10);    
-        sliderX.setMinorTickSpacing(1);
+        sliderX.setMajorTickSpacing(90);    
+        sliderX.setMinorTickSpacing(45);
         sliderX.setPaintTicks(true);
         sliderX.setPaintLabels(true);
-        sliderY.setMajorTickSpacing(10);    
-        sliderY.setMinorTickSpacing(1);
+        sliderY.setMajorTickSpacing(2);    
+        sliderY.setMinorTickSpacing(2);
         sliderY.setPaintTicks(true);
         sliderY.setPaintLabels(true);
         
         spinner = new JSpinner();
-        spinner.setValue(10);
+        spinner.setValue(4);
 
         JPanel aux = new JPanel();
         JLabel asistente = new JLabel("Hola! Dibuja algo!");
@@ -76,17 +76,17 @@ public class Window extends JFrame implements MouseListener{
         );
             
     segmentado = new JRadioButton("Segmentado", false );
-    segmentado.addItemListener(new ItemListener(){ 
+   segmentado.addItemListener(new ItemListener(){ 
 
     public void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
-            spinner.setEnabled(true);
-            spinner2.setEnabled(true);
+          //  spinner.setEnabled(true);
+          //  spinner2.setEnabled(true);
             continuo.setSelected(false);                
         }
         else if (e.getStateChange() == ItemEvent.DESELECTED) {
-            spinner.setEnabled(false);
-            spinner2.setEnabled(false);
+           // spinner.setEnabled(false);
+           // spinner2.setEnabled(false);
         }
     }
 }
@@ -127,7 +127,7 @@ pDatos.add(tbxDimY);
 JPanel ppDatos = new JPanel(new GridLayout(1,4,10,1));
 nombre = new JTextField();
 nombre.setBounds(0,0 , 50,10);
-lados = new JTextField();
+lados = new JTextField("2");
 lados.setBounds(0,0 , 50,10);
 
 ppDatos.add(new JLabel("Nombre:"));
@@ -192,12 +192,11 @@ p.setBorder(
     
         
     public void mouseClicked(MouseEvent e) {  
-      
+      System.out.println("clicked ");
     }
     
     
     public void mouseEntered(MouseEvent e) {
-        System.out.println("entered");
         
       }
   
@@ -207,11 +206,14 @@ p.setBorder(
       
     public void mouseReleased(MouseEvent e) {
         punto2 = new Punto(e.getX(), e.getY()-130);
+
+        if(punto1.distanciaCon(punto2) >= 2 ){
         System.out.println(punto2);
+
         Poligono  p  = new Poligono(
             punto1.puntoMedio(punto2),
             punto1, 
-            sliderX.getValue(),
+           Integer.parseInt(lados.getText()),
             color , 
             (int)spinner.getValue(),
             segmentado.isSelected()
@@ -222,6 +224,7 @@ p.setBorder(
         panelBotones.repaint();
           iesimo++;
         panel.graficarPoligonos();
+    }
     }  
  
 
@@ -230,30 +233,12 @@ p.setBorder(
         System.out.println("hold");
         
         punto1 = new Punto(e.getX(), e.getY()-130);
+        punto3 = punto1; 
         System.out.println(punto1);
     }
     
 
-    void segmentar(ArrayList<Punto> arr , int segmento , int espacio){
-        int inicio  = segmento, fin  = espacio; 
-        int i  =0 ;
-        boolean continua = true;
-        while(continua){
-            
-            inicio = segmento * i;
-            fin = inicio + espacio;
-            i++;
-            try{
-                arr.subList(inicio, fin ).clear(); 
-                
-            }catch(Exception e ){
-                if(inicio < arr.size())
-                arr.subList(inicio, arr.size()).clear();
-                continua = false ; 
-            }
-        }
-        
-    }
+ 
     
     
     public JPanel  getJPanel(JPanel p, String nombre){
@@ -262,18 +247,37 @@ p.setBorder(
         JLabel label = new JLabel(nombre);
         JButton tra = new JButton("Tra");
         tra.addActionListener(evt->{
-            trasladar(nombre);
+            this.nombre.setText(nombre);
+            trasladar(nombre , punto3 );
+            lados.setText("" +this.panel.getPoligono(nombre).getLados());
+
+            tbxDimX.setText("" +this.panel.getPoligono(nombre).getCentro().getX());
+            tbxDimY.setText("" +this.panel.getPoligono(nombre).getCentro().getY());
+            
         });
         JButton esc = new JButton("Esc");
         esc.addActionListener(evt->{
-            escalar(nombre);
+            this.nombre.setText(nombre);
+            lados.setText("" +this.panel.getPoligono(nombre).getLados());
+
+            escalar(nombre , sliderY.getValue());
+            tbxDimX.setText("" +this.panel.getPoligono(nombre).getCentro().getX());
+            tbxDimY.setText("" +this.panel.getPoligono(nombre).getCentro().getY());
+            
         });
         JButton rot = new JButton("Rot");
         rot.addActionListener(evt->{
-            rotar(nombre);
+            this.nombre.setText(nombre);
+            rotar(nombre , sliderX.getValue());
+            
+            lados.setText("" +this.panel.getPoligono(nombre).getLados());
+            tbxDimX.setText("" +this.panel.getPoligono(nombre).getCentro().getX());
+            tbxDimY.setText("" +this.panel.getPoligono(nombre).getCentro().getY());
+            
         });
         JButton eli = new JButton("Eli");
         eli.addActionListener(evt->{
+            this.nombre.setText(nombre);
             eliminar(nombre);
         });
         panel.add(label );
@@ -281,7 +285,7 @@ p.setBorder(
         panel.add(tra);
         panel.add(esc);
         panel.add(rot);
-        panel.add(eli);
+       // panel.add(eli);
         panel.setBounds(0,0,250,400);
         // eli.addActionListener(evt->{
         //     p.add(getJPanel(p, nombre));
@@ -292,26 +296,30 @@ p.setBorder(
     }
 
     
-    public void trasladar (String nombre ){
+    public void trasladar (String nombre , Punto nuevoCentro ){
         
-        panel.trasladarPoligono(nombre);
+        panel.trasladarPoligono(nombre, nuevoCentro);
+        panel.graficarPoligonos();
     }
-    public void rotar(String nombre ){
+    public void rotar(String nombre , int angulo ){
         
-        panel.rotarPoligono(nombre);
+        panel.rotarPoligono(nombre, angulo );
+        panel.graficarPoligonos();
     }
-    public void escalar(String nombre ){
+    public void escalar(String nombre , int factor ){
         
-        panel.escalarPoligono(nombre);
+        panel.escalarPoligono(nombre, factor);
+        panel.graficarPoligonos();
     }
     public void eliminar(String nombre ){
-
+        
         panel.eliminarPoligono(nombre);
+        panel.graficarPoligonos();
     }
 private javax.swing.JFrame f;
 private javax.swing.JPanel p, panelBotones;
 private javax.swing.JButton botonBorrar;
-private javax.swing.JTextField tbxDimX,tbxDimY,x0 , y0 , xn,yn, nombre , lados;
+ javax.swing.JTextField tbxDimX,tbxDimY,x0 , y0 , xn,yn, nombre , lados;
 private javax.swing.JLabel lbl, lb;
 private BufferedImage img;
 private Panel panel;
@@ -323,7 +331,8 @@ private boolean point;
 private int estado , iesimo; 
 private Color color;  
 private String actual; 
-private Punto punto1 , punto2 ; 
+private Punto punto1 , punto2 , punto3 ; 
+
         
 }    
     

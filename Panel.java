@@ -37,22 +37,44 @@ public class Panel extends JPanel {
 
         ArrayList<Punto> arr = p.getVertices();
         for(int i = 0 ; i < arr.size()-1 ;  i++){
-            Bresenham dda = new Bresenham();
+            Bresenham bresenham = new Bresenham();
 
-            ArrayList<Punto> linea = dda.calcular (arr.get(i).getX() ,arr.get(i).getY() ,arr.get(i+1).getX() ,arr.get(i+1).getY()  );
-            graficar(linea , 10 , p.getColor());
+            ArrayList<Punto> linea = bresenham.calcular (arr.get(i).getX() ,arr.get(i).getY() ,arr.get(i+1).getX() ,arr.get(i+1).getY()  );
+            if(p.getEstilo())
+             segmentar(linea ,  15 , 10  );
+            graficar(linea , p.getGrosor() , p.getColor());
         }
         repaint();
 
     }
 
+    void segmentar(ArrayList<Punto> arr , int segmento , int espacio){
+        int inicio  = segmento, fin  = espacio; 
+        int i  =0 ;
+        boolean continua = true;
+        while(continua){
+            
+            inicio = segmento * i;
+            fin = inicio + espacio;
+            i++;
+            try{
+                arr.subList(inicio, fin ).clear(); 
+                
+            }catch(Exception e ){
+                if(inicio < arr.size())
+                arr.subList(inicio, arr.size()).clear();
+                continua = false ; 
+            }
+        }
+        
+    }
 
    public void setPunto(int x  , int y ,int grosor ,Color c  ){
 
       for(int i = x-(grosor/2) ; i <= x+(grosor/2); i++) 
         for(int j = y -(grosor/2) ; j <= y +(grosor/2); j++)
-            if(i >= 0  && i < x && j > 0 && j < y )
-            img.setRGB(i,j,c.getRGB());
+            if(i >= 0  && i < img.getWidth() && j > 0 && j < img.getHeight() )
+                img.setRGB(i,j,c.getRGB()); 
 
     }
 
@@ -92,24 +114,28 @@ public class Panel extends JPanel {
 
 
 
-    public void trasladarPoligono(String nombre) {
-        poligonos.get(nombre);
+    public void trasladarPoligono(String nombre , Punto nuevoCentro) {
+        poligonos.get(nombre).trasladar(nuevoCentro);;
 
     }
 
 
 
-    public void rotarPoligono(String nombre) {
-        poligonos.get(nombre);
+    public void rotarPoligono(String nombre, int angulo ) {
+        poligonos.get(nombre).rotar(angulo);;
     }
 
 
 
-    public void escalarPoligono(String nombre) {
-    poligonos.get(nombre);        
+    public void escalarPoligono(String nombre , int factor ) {
+    poligonos.get(nombre).escalar(factor);        
     }
 
+    public Poligono getPoligono(String nombre){
 
+        return poligonos.get(nombre);
+
+    }
 
     public void eliminarPoligono(String nombre) {
         poligonos.remove(nombre);

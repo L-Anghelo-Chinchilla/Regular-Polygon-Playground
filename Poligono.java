@@ -36,6 +36,48 @@ public class Poligono {
 
     }
 
+    public void rotar(int angulo){
+
+        int xP = pivote.getX(); 
+        int yP = pivote.getY();
+        int xC = centro.getX();
+        int yC = centro.getY();
+        
+        int xN = (int) Math.round(xC+((xP-xC)*Math.cos(angulo))-((yP-yC)*Math.sin(angulo)));
+        int yN = (int) Math.round(yC+((yP-yC)*Math.cos(angulo))+((xP-xC)*Math.sin(angulo)));
+        
+        pivote = new Punto(xN,yN);
+        calcularVertices();
+
+    }
+
+    public void trasladar(Punto a ){ 
+     
+        int difx = centro.getX() - pivote.getX();
+        int dify =  centro.getY() - pivote.getY();
+        int nX = a.getX() + difx;
+        int nY = a.getY() + dify;
+        pivote = new Punto(nX,nY);
+        centro  = a; 
+        calcularVertices();
+        
+   }
+
+   public void escalar(int factor){
+        if(factor< 0 ){
+         factor *= -0.01 ;
+        } 
+       int difX = centro.getX() - pivote.getX(); 
+        int difY = centro.getY() - pivote.getY(); 
+        int nX = centro.getX()+ (difX * factor);
+        int nY = centro.getY()+(difY *factor);
+        System.out.println(centro);
+        System.out.println(pivote);
+        pivote = new Punto(nX, nY);
+        System.out.println(pivote);
+        calcularVertices();
+   }
+
     Punto  getPivote(){return pivote;}
     Punto  getCentro(){return centro;}
     int    getLados(){return lados;}
