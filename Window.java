@@ -3,15 +3,18 @@ import javax.swing.*;
 import java.awt.*;      
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import javax.swing.Timer;
+
+
 public class Window extends JFrame implements MouseListener{
-    private int resx, resy , px, py ;
-    boolean point;
+
     
     Window(){
         
         addMouseListener(this);
+        actual = "Polígono ";
         point = true;
+        estado= iesimo = 0 ; 
+        color = Color.BLACK;
         setBounds(0,0,1900,1000);
         lbl = new JLabel("Defina ancho y alto");
         tbxDimX = new JTextField();
@@ -32,16 +35,7 @@ public class Window extends JFrame implements MouseListener{
     y0 = new JTextField();
     yn = new JTextField();
     xn = new JTextField();
-    
-    
-    
-    
-    // btnResen.addActionListener(new java.awt.event.ActionListener()
-    // {             public void actionPerformed(java.awt.event.ActionEvent evt) {
-        //         btnResenActionPerformed();
-        
-        //     }
-        // });
+ 
         
         int MIN = -31;
         int MAX = 31;
@@ -61,13 +55,7 @@ public class Window extends JFrame implements MouseListener{
         
         spinner = new JSpinner();
         spinner.setValue(10);
-        
-        spinner2 = new JSpinner();
-        spinner2.setValue(20);
-        
-        spinner.setEnabled(false);
-        spinner2.setEnabled(false);
-        
+
         JPanel aux = new JPanel();
         JLabel asistente = new JLabel("Hola! Dibuja algo!");
         JButton botonGuardar = new JButton("Guardar");
@@ -76,7 +64,7 @@ public class Window extends JFrame implements MouseListener{
         aux.add(asistente, BorderLayout.SOUTH);
         
         
-        JPanel panelEstilo  = new JPanel(/*new GridLayout(2, 2, 15, 5*/);
+        JPanel panelEstilo  = new JPanel(new GridLayout(2, 2, 15, 5));
         continuo = new JRadioButton("Continuo", true );
         continuo.addItemListener(new ItemListener(){ 
             
@@ -106,11 +94,14 @@ public class Window extends JFrame implements MouseListener{
 
 panelEstilo.add(continuo , BorderLayout.NORTH);
 panelEstilo.add(segmentado, BorderLayout.NORTH);
+panelEstilo.add(new JLabel("Grosor de linea"));
+panelEstilo.add(spinner);
+
 panelEstilo.setBorder(
     BorderFactory.createTitledBorder("Estilo de la linea"));
     
     
-    JPanel panelBotones = new JPanel(new GridLayout(2,1, 5, 4));
+     panelBotones = new JPanel(new GridLayout(2,1, 5, 4));
     panelBotones.setBorder(
         BorderFactory.createTitledBorder("Dibujar "));
         
@@ -160,7 +151,7 @@ p.setBorder(
     p.setOpaque(true);
     p.setBackground(Color.WHITE);
     JPanel panelPoligonos = new JPanel();
-    //panelPoligonos.add(panelDatos);
+    
     panelColores.setBorder(
         BorderFactory.createTitledBorder("Ecoja un color"));
         Color [] colores = 
@@ -170,15 +161,19 @@ p.setBorder(
             negro.setBackground(c);
             negro.setForeground(c);
             negro.setOpaque(true);
+            negro.addActionListener(evt->{
+                color = negro.getBackground();
+                p.repaint();
+            });
             panelColores.add(negro);
         }
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.PAGE_AXIS));
-        panelBotones.add(getJButton(panelBotones));
+        panelBotones.add(getJPanel(panelBotones, actual+iesimo++));
         JScrollPane scroll = new JScrollPane(panelBotones);
         add(p, BorderLayout.NORTH); 
         add(scroll, BorderLayout.EAST); 
-        pan = new Panel( 1300, 985 , img);
-        add(pan ,BorderLayout.CENTER );
+        panel = new Panel( 1300, 985 , img);
+        add(panel ,BorderLayout.CENTER );
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -187,115 +182,124 @@ p.setBorder(
     
     private void botonBorrarActionPerformed(java.awt.event.ActionEvent evt) {
         
-        pan.limpiar();
-        pan.repaint();
-        Poligono  p  = new Poligono(
-            new Punto (200,200), 
-            new Punto (300,300),
-            sliderX.getValue()
-            );
-            pan.graficarPoligono(p );
-            pan.repaint();
+        panel.eliminar();
+        panel.repaint();
+        iesimo = estado = 0 ;
+        panelBotones.removeAll(); 
+        panelBotones.repaint(); 
+        
         }
+    
         
-        public void mouseClicked(MouseEvent e) {  
-            pan.setPunto(e.getX(),e.getY() -130, sliderX.getValue());
-            if(point){
-                x0.setText(""+e.getX());
-                y0.setText(""+e.getY());
-                point = !point; 
-            }else{
-                xn.setText(""+e.getX());
-                point = !point; 
-                yn.setText(""+e.getY());
-            }
-            
-            
-        }
+    public void mouseClicked(MouseEvent e) {  
+      
+    }
+    
+    
+    public void mouseEntered(MouseEvent e) {
+        System.out.println("entered");
         
-        public void mouseEntered(MouseEvent e) {  }
-        public void mouseExited(MouseEvent e) {  } 
-        public void mouseReleased(MouseEvent e) {}  
-        public void mousePressed(MouseEvent e) {}
-        
-        
-        
-        void segmentar(ArrayList<Punto> arr , int segmento , int espacio){
-            int inicio  = segmento, fin  = espacio; 
-            int i  =0 ;
-            boolean continua = true;
-            while(continua){
-                
-                inicio = segmento * i;
-                fin = inicio + espacio;
-                i++;
-                try{
-                    arr.subList(inicio, fin ).clear(); 
-                    
-                }catch(Exception e ){
-                    if(inicio < arr.size())
-                    arr.subList(inicio, arr.size()).clear();
-                    continua = false ; 
-                }
-            }
-            
-        }
-        
-        
-        static public JPanel  getJButton(JPanel p){
-            JPanel jp  = new JPanel();
-            JPanel pan = new JPanel(new GridLayout(1,5 , 5,5));
-            JLabel label = new JLabel("Poligono i");
-            JButton tra = new JButton("Tra");
-            JButton esc = new JButton("Esc");
-            JButton rot = new JButton("Rot");
-            JButton eli = new JButton("Eli");
-            pan.add(label );
-            jp.add(pan);
+      }
   
-            pan.add(tra);
-            pan.add(esc);
-            pan.add(rot);
-            pan.add(eli);
-            pan.setBounds(0,0,250,400);
-            eli.addActionListener(evt->{
-                p.add(getJButton(p));
-                p.revalidate();
-                p.repaint();
-            });
-            //pan.pack();
-            return jp;
+
+    public void mouseExited(MouseEvent e) {  } 
+  
+      
+    public void mouseReleased(MouseEvent e) {
+        punto2 = new Punto(e.getX(), e.getY()-130);
+        System.out.println(punto2);
+        Poligono  p  = new Poligono(
+            punto1.puntoMedio(punto2),
+            punto1, 
+            sliderX.getValue(),
+            color , 
+            (int)spinner.getValue(),
+            segmentado.isSelected()
+            );
+        panel.addPoligono(actual + iesimo, p  );  
+        panelBotones.add(getJPanel(panelBotones, actual+iesimo));
+        panelBotones.revalidate();
+        panelBotones.repaint();
+          iesimo++;
+        panel.graficarPoligonos();
+    }  
+ 
+
+    public void mousePressed(MouseEvent e) {
+        
+        System.out.println("hold");
+        
+        punto1 = new Punto(e.getX(), e.getY()-130);
+        System.out.println(punto1);
+    }
+    
+
+    void segmentar(ArrayList<Punto> arr , int segmento , int espacio){
+        int inicio  = segmento, fin  = espacio; 
+        int i  =0 ;
+        boolean continua = true;
+        while(continua){
+            
+            inicio = segmento * i;
+            fin = inicio + espacio;
+            i++;
+            try{
+                arr.subList(inicio, fin ).clear(); 
+                
+            }catch(Exception e ){
+                if(inicio < arr.size())
+                arr.subList(inicio, arr.size()).clear();
+                continua = false ; 
+            }
         }
         
-        private javax.swing.JFrame f;
-        private javax.swing.JPanel p;
-        private javax.swing.JButton botonBorrar;
-        private javax.swing.JTextField tbxDimX,tbxDimY,x0 , y0 , xn,yn, nombre , lados;
-        private javax.swing.JLabel lbl, lb;
-        private BufferedImage img;
-        private Panel pan;
-        private JSlider sliderX , sliderY;
-        private JSpinner spinner, spinner2;
-        private JRadioButton continuo, segmentado;
+    }
+    
+    
+    static public JPanel  getJPanel(JPanel p, String nombre){
+        JPanel jp  = new JPanel();
+        JPanel panel = new JPanel(new GridLayout(1,5 , 5,5));
+        JLabel label = new JLabel(nombre);
+        JButton tra = new JButton("Tra");
+        JButton esc = new JButton("Esc");
+        JButton rot = new JButton("Rot");
+        JButton eli = new JButton("Eli");
+        panel.add(label );
+        jp.add(panel);
+        panel.add(tra);
+        panel.add(esc);
+        panel.add(rot);
+        panel.add(eli);
+        panel.setBounds(0,0,250,400);
+        eli.addActionListener(evt->{
+            p.add(getJPanel(p, nombre));
+            p.revalidate();
+            p.repaint();
+        });
+        return jp;
+    }
+    
+private javax.swing.JFrame f;
+private javax.swing.JPanel p, panelBotones;
+private javax.swing.JButton botonBorrar;
+private javax.swing.JTextField tbxDimX,tbxDimY,x0 , y0 , xn,yn, nombre , lados;
+private javax.swing.JLabel lbl, lb;
+private BufferedImage img;
+private Panel panel;
+private JSlider sliderX , sliderY;
+private JSpinner spinner, spinner2;
+private JRadioButton continuo, segmentado;
+private boolean levantado;
+private boolean point;
+private int estado , iesimo; 
+private Color color;  
+private String actual; 
+private Punto punto1 , punto2 ; 
         
 }    
     
     // private void btnDDAActionPerformed(){
-    //     int px0 , py0 , pxn , pyn ; 
-    //     px0 = Integer.parseInt(x0.getText()); 
-    //     py0 = Integer.parseInt(y0.getText())-130;
-    //     pxn = Integer.parseInt(xn.getText());
-    //     pyn = Integer.parseInt(yn.getText())-130;
-    //     DDA b = new DDA();
-    //     ArrayList<Punto> arr = b.DDA(px0,py0,pxn,pyn);
-    //     int g  = sliderX.getValue();
-    //     if(segmentado.isSelected()){
-    //         int segmento  = (int)spinner.getValue();
-    //         int espacio  = (int)spinner2.getValue();
-    //         segmentar(arr,segmento , espacio);
-    //     }
-    //     pan.graficar(arr, g ); 
-    // }
+    //   
     
     // private void btnResenActionPerformed(){
         
@@ -313,7 +317,14 @@ p.setBorder(
     //         int espacio  = (int)spinner2.getValue();
     //         segmentar(arr,segmento , espacio);
     //     }
-    //     pan.graficar(arr, g ); 
+    //     panel.graficar(arr, g ); 
         
     // }
     
+
+    // btnResen.addActionListener(new java.awt.event.ActionListener()
+    // {             public void actionPerformed(java.awt.event.ActionEvent evt) {
+        //         btnResenActionPerformed();
+        
+        //     }
+        // });
