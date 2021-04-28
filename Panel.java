@@ -21,7 +21,6 @@ public class Panel extends JPanel {
     }
 
 
-
     public void graficar(ArrayList<Punto> puntos, int grosor , Color c  ){
 
         for(int i =0 ; i < puntos.size() ; i++){
@@ -48,6 +47,7 @@ public class Panel extends JPanel {
 
     }
 
+
     void segmentar(ArrayList<Punto> arr , int segmento , int espacio){
         int inicio  = segmento, fin  = espacio; 
         int i  =0 ;
@@ -68,6 +68,7 @@ public class Panel extends JPanel {
         }
         
     }
+
 
    public void setPunto(int x  , int y ,int grosor ,Color c  ){
 
@@ -100,18 +101,21 @@ public class Panel extends JPanel {
 
     }
 
+
     public void eliminar(){
         poligonos.clear();
         limpiar();
     }
 
+
     public void limpiar(){
+
+
 
         for (int i = 0 ; i <  x ; i++)
             for(int j = 0 ; j < y ; j++) 
                 this.img.setRGB(i,j, new Color(235, 235, 235).getRGB() );
     }
-
 
 
     public void trasladarPoligono(String nombre , Punto nuevoCentro) {
@@ -120,16 +124,15 @@ public class Panel extends JPanel {
     }
 
 
-
     public void rotarPoligono(String nombre, int angulo ) {
         poligonos.get(nombre).rotar(angulo);;
     }
 
 
-
     public void escalarPoligono(String nombre , int factor ) {
     poligonos.get(nombre).escalar(factor);        
     }
+
 
     public Poligono getPoligono(String nombre){
 
@@ -137,8 +140,26 @@ public class Panel extends JPanel {
 
     }
 
+
     public void eliminarPoligono(String nombre) {
         poligonos.remove(nombre);
         graficarPoligonos();
     }
+
+    public BufferedImage getImage(){
+
+        BufferedImage image = img; 
+        int color = new Color(235, 235, 235).getRGB();
+        for (int y = 0; y < image.getHeight(); ++y) {
+            for (int x = 0; x < image.getWidth(); ++x) {
+                 int argb = image.getRGB(x, y);
+                 if ((argb  ==  color ))
+                 {
+                      image.setRGB(x, y, 0);
+                 }
+            }
+        }
+        return image; 
+    }
+
 }

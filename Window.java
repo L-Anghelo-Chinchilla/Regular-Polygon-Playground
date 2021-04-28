@@ -1,8 +1,11 @@
 import java.util.*;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;      
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 
 public class Window extends JFrame implements MouseListener{
@@ -12,7 +15,6 @@ public class Window extends JFrame implements MouseListener{
         
         addMouseListener(this);
         actual = "Poligono ";
-        point = true;
         estado= iesimo = 0 ; 
         color = Color.BLACK;
         setBounds(0,0,1900,1000);
@@ -59,12 +61,21 @@ public class Window extends JFrame implements MouseListener{
         JPanel aux = new JPanel();
         JLabel asistente = new JLabel("Hola! Dibuja algo!");
         JButton botonGuardar = new JButton("Guardar");
-        aux.add(botonBorrar , BorderLayout.EAST);
-        aux.add(botonGuardar, BorderLayout.WEST);
+        botonGuardar.addActionListener(new java.awt.event.ActionListener()
+        {             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            botonGuardaraAction();
+        }
+
+        
+    });
+    aux.add(botonGuardar, BorderLayout.WEST);
+    aux.add(botonBorrar , BorderLayout.EAST);
         aux.add(asistente, BorderLayout.SOUTH);
+        aux.setBackground(Color.white);
         
         
         JPanel panelEstilo  = new JPanel(new GridLayout(2, 2, 15, 5));
+        panelEstilo.setBackground(Color.white);
         continuo = new JRadioButton("Continuo", true );
         continuo.addItemListener(new ItemListener(){ 
             
@@ -102,10 +113,14 @@ panelEstilo.setBorder(
     
     
      panelBotones = new JPanel(new GridLayout(2,1, 5, 4));
+     panelBotones.setBackground(Color.white);
+
     panelBotones.setBorder(
-        BorderFactory.createTitledBorder("Dibujar "));
+        BorderFactory.createTitledBorder("Poligonos"));
         
         JPanel editar = new JPanel(new GridLayout(1, 2,4, 10));
+        editar.setBackground(Color.white);
+
         editar.setBorder(
             BorderFactory.createTitledBorder("Editar"));
             editar.add(sliderX);
@@ -115,6 +130,8 @@ panelEstilo.setBorder(
             panelColores.setBorder(
                 BorderFactory.createTitledBorder("Ecoja un color"));
     JPanel panelDatos = new JPanel(new GridLayout(2, 1, 5, 5)); 
+        panelDatos.setBackground(Color.white);
+        
     panelDatos.setBorder(
                     
 BorderFactory.createTitledBorder("Datos"));
@@ -146,11 +163,14 @@ p.add(panelBotones);
 p.add(editar);
 p.add(panelColores);
 p.add(panelDatos);
+p.setBackground(Color.white);
+
 p.setBorder(
     BorderFactory.createTitledBorder(" Dibuje una linea "));
     p.setOpaque(true);
     p.setBackground(Color.WHITE);
     JPanel panelPoligonos = new JPanel();
+    panelColores.setBackground(Color.white);
     
     panelColores.setBorder(
         BorderFactory.createTitledBorder("Ecoja un color"));
@@ -170,6 +190,7 @@ p.setBorder(
         panelBotones.setLayout(new BoxLayout(panelBotones, BoxLayout.PAGE_AXIS));
         panelBotones.add(getJPanel(panelBotones, actual+iesimo++));
         JScrollPane scroll = new JScrollPane(panelBotones);
+        scroll.setBackground(Color.white);
         add(p, BorderLayout.NORTH); 
         add(scroll, BorderLayout.EAST); 
         panel = new Panel( 1300, 985 , img);
@@ -180,6 +201,41 @@ p.setBorder(
     }
     
     
+    private void botonGuardaraAction() {
+        f = new JFrame();
+        JPanel pan = new JPanel(new FlowLayout(FlowLayout.CENTER,1 , 50  )); 
+        JPanel pane = new JPanel(new GridLayout(1,2,5,5));
+        JTextField archivo = new JTextField();
+        archivo.setSize( 500 ,50 );
+        JButton boton = new JButton("Guardar");
+        boton.addActionListener(new java.awt.event.ActionListener()
+        {             public void actionPerformed(java.awt.event.ActionEvent evt) {
+            guardarArchivo(archivo.getText());
+        }
+
+    });
+        pane.add(archivo);        
+        pane.add(boton);
+        pan.add(pane);
+        f.add(pan);         
+        f.setBounds(50, 50 , 300, 200);
+        f.setResizable(false);
+        
+        f.setVisible(true);
+    }
+
+
+    
+    private void guardarArchivo(String texto) {
+
+        File outputfile = new File( texto + ".png");
+        try{
+        ImageIO.write(panel.getImage(), "png", outputfile);
+        }catch(Exception e ){}
+        f.dispose();
+
+    }
+
     private void botonBorrarActionPerformed(java.awt.event.ActionEvent evt) {
         
         panel.eliminar();
@@ -236,10 +292,7 @@ p.setBorder(
         punto3 = punto1; 
         System.out.println(punto1);
     }
-    
-
- 
-    
+      
     
     public JPanel  getJPanel(JPanel p, String nombre){
         JPanel jp  = new JPanel();
@@ -285,13 +338,9 @@ p.setBorder(
         panel.add(tra);
         panel.add(esc);
         panel.add(rot);
-       // panel.add(eli);
+      //  panel.add(eli);
         panel.setBounds(0,0,250,400);
-        // eli.addActionListener(evt->{
-        //     p.add(getJPanel(p, nombre));
-        //     p.revalidate();
-        //     p.repaint();
-        // });
+
         return jp;
     }
 
@@ -301,68 +350,45 @@ p.setBorder(
         panel.trasladarPoligono(nombre, nuevoCentro);
         panel.graficarPoligonos();
     }
+ 
+
     public void rotar(String nombre , int angulo ){
         
         panel.rotarPoligono(nombre, angulo );
         panel.graficarPoligonos();
     }
+ 
+
     public void escalar(String nombre , int factor ){
         
         panel.escalarPoligono(nombre, factor);
         panel.graficarPoligonos();
     }
+ 
+ 
     public void eliminar(String nombre ){
         
         panel.eliminarPoligono(nombre);
+        panelBotones.remove(Integer.parseInt(nombre.split(" ")[1]));
+        panelBotones.repaint();
         panel.graficarPoligonos();
+
     }
+
+
 private javax.swing.JFrame f;
 private javax.swing.JPanel p, panelBotones;
 private javax.swing.JButton botonBorrar;
- javax.swing.JTextField tbxDimX,tbxDimY,x0 , y0 , xn,yn, nombre , lados;
+        javax.swing.JTextField tbxDimX,tbxDimY,x0 , y0 , xn,yn, nombre , lados;
 private javax.swing.JLabel lbl, lb;
 private BufferedImage img;
 private Panel panel;
 private JSlider sliderX , sliderY;
 private JSpinner spinner, spinner2;
 private JRadioButton continuo, segmentado;
-private boolean levantado;
-private boolean point;
 private int estado , iesimo; 
 private Color color;  
 private String actual; 
 private Punto punto1 , punto2 , punto3 ; 
 
-        
 }    
-    
-    // private void btnDDAActionPerformed(){
-    //   
-    
-    // private void btnResenActionPerformed(){
-        
-        
-    //     int px0 , py0 , pxn , pyn; 
-    //     px0 = Integer.parseInt(x0.getText()); 
-    //     py0 = Integer.parseInt(y0.getText())-130 ;
-    //     pxn = Integer.parseInt(xn.getText());
-    //     pyn = Integer.parseInt(yn.getText())-130 ;
-    //     Bresenham b = new Bresenham();
-    //     ArrayList<Punto> arr = b.calcular(px0,py0,pxn,pyn);
-    //     int g  = sliderX.getValue();
-    //     if(segmentado.isSelected()){
-    //         int segmento  = (int)spinner.getValue();
-    //         int espacio  = (int)spinner2.getValue();
-    //         segmentar(arr,segmento , espacio);
-    //     }
-    //     panel.graficar(arr, g ); 
-        
-    // }
-    
-
-    // btnResen.addActionListener(new java.awt.event.ActionListener()
-    // {             public void actionPerformed(java.awt.event.ActionEvent evt) {
-        //         btnResenActionPerformed();
-        
-        //     }
-        // });

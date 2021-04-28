@@ -11,9 +11,11 @@ public  class Punto {
 
     }
 
+
     public int getX(){
         return x; 
     }
+
 
     public int getY(){
         return y;
@@ -27,11 +29,13 @@ public  class Punto {
         return  distancia     ;                   
     }
 
+
     public  Punto puntoMedio(Punto otro){
        int xx = Math.round((x + otro.getX())/2);
        int yy = Math.round((y + otro.getY())/2);
         return new Punto(xx, yy ); 
     }
+
 
     public   Punto tercerPunto(Punto pivote , int angulo , double distancia){
        
@@ -45,10 +49,10 @@ public  class Punto {
         return new Punto((int)xx,(int)yy);
     }
 
-
     
     public String toString(){
         return "x:" + x +"  y: " + y ;
 
     }
+
 }
