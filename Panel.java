@@ -8,14 +8,14 @@ public class Panel extends JPanel {
 
     private int  x , y ;
     private BufferedImage img;
-    private Map<String,Poligono> poligonos; 
+    private SortedMap<String,Poligono> poligonos; 
 
     Panel(int x , int y, BufferedImage img){
         
         this.x = x ; 
         this.y = y ; 
         this.img  = new BufferedImage(x,y,BufferedImage.TYPE_INT_ARGB  );
-        poligonos = new HashMap<String, Poligono>();
+        poligonos = new TreeMap<String, Poligono>();
         limpiar();
         
     }
@@ -59,8 +59,9 @@ public class Panel extends JPanel {
 
     void graficarPoligonos(){
         limpiar();
-        for(Poligono p : poligonos.values())
-            graficarPoligono(p);
+        
+        for(String  key: poligonos.keySet())
+            graficarPoligono(poligonos.get(key));
     
     }
     
@@ -87,5 +88,31 @@ public class Panel extends JPanel {
         for (int i = 0 ; i <  x ; i++)
             for(int j = 0 ; j < y ; j++) 
                 this.img.setRGB(i,j, new Color(235, 235, 235).getRGB() );
+    }
+
+
+
+    public void trasladarPoligono(String nombre) {
+        poligonos.get(nombre);
+
+    }
+
+
+
+    public void rotarPoligono(String nombre) {
+        poligonos.get(nombre);
+    }
+
+
+
+    public void escalarPoligono(String nombre) {
+    poligonos.get(nombre);        
+    }
+
+
+
+    public void eliminarPoligono(String nombre) {
+        poligonos.remove(nombre);
+        graficarPoligonos();
     }
 }

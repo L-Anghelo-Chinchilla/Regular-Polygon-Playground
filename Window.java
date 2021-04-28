@@ -11,7 +11,7 @@ public class Window extends JFrame implements MouseListener{
     Window(){
         
         addMouseListener(this);
-        actual = "Polígono ";
+        actual = "Poligono ";
         point = true;
         estado= iesimo = 0 ; 
         color = Color.BLACK;
@@ -256,14 +256,26 @@ p.setBorder(
     }
     
     
-    static public JPanel  getJPanel(JPanel p, String nombre){
+    public JPanel  getJPanel(JPanel p, String nombre){
         JPanel jp  = new JPanel();
         JPanel panel = new JPanel(new GridLayout(1,5 , 5,5));
         JLabel label = new JLabel(nombre);
         JButton tra = new JButton("Tra");
+        tra.addActionListener(evt->{
+            trasladar(nombre);
+        });
         JButton esc = new JButton("Esc");
+        esc.addActionListener(evt->{
+            escalar(nombre);
+        });
         JButton rot = new JButton("Rot");
+        rot.addActionListener(evt->{
+            rotar(nombre);
+        });
         JButton eli = new JButton("Eli");
+        eli.addActionListener(evt->{
+            eliminar(nombre);
+        });
         panel.add(label );
         jp.add(panel);
         panel.add(tra);
@@ -271,14 +283,31 @@ p.setBorder(
         panel.add(rot);
         panel.add(eli);
         panel.setBounds(0,0,250,400);
-        eli.addActionListener(evt->{
-            p.add(getJPanel(p, nombre));
-            p.revalidate();
-            p.repaint();
-        });
+        // eli.addActionListener(evt->{
+        //     p.add(getJPanel(p, nombre));
+        //     p.revalidate();
+        //     p.repaint();
+        // });
         return jp;
     }
+
     
+    public void trasladar (String nombre ){
+        
+        panel.trasladarPoligono(nombre);
+    }
+    public void rotar(String nombre ){
+        
+        panel.rotarPoligono(nombre);
+    }
+    public void escalar(String nombre ){
+        
+        panel.escalarPoligono(nombre);
+    }
+    public void eliminar(String nombre ){
+
+        panel.eliminarPoligono(nombre);
+    }
 private javax.swing.JFrame f;
 private javax.swing.JPanel p, panelBotones;
 private javax.swing.JButton botonBorrar;
