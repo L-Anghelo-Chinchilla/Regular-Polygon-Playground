@@ -1,3 +1,5 @@
+package src;
+
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;      
@@ -90,9 +92,7 @@ public class Panel extends JPanel {
     
     
     void addPoligono(String nombre , Poligono poligono ){
-        
         poligonos.put(nombre, poligono);
-        System.out.println(poligonos.size());
     }
 
 
@@ -130,14 +130,12 @@ public class Panel extends JPanel {
 
 
     public void escalarPoligono(String nombre , int factor ) {
-    poligonos.get(nombre).escalar(factor);        
+        poligonos.get(nombre).escalar(factor);        
     }
 
 
     public Poligono getPoligono(String nombre){
-
         return poligonos.get(nombre);
-
     }
 
 
@@ -161,5 +159,4 @@ public class Panel extends JPanel {
         }
         return image; 
     }
-
 }

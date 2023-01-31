@@ -1,3 +1,5 @@
+package src;
+
 import java.util.*;
 import java.awt.Color;
 public class Poligono {
@@ -71,10 +73,7 @@ public class Poligono {
         int difY = centro.getY() - pivote.getY(); 
         int nX = centro.getX()+ (difX * factor);
         int nY = centro.getY()+(difY *factor);
-        System.out.println(centro);
-        System.out.println(pivote);
         pivote = new Punto(nX, nY);
-        System.out.println(pivote);
         calcularVertices();
    }
 

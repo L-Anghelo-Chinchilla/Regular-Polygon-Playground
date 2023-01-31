@@ -1,10 +1,11 @@
+import src.Gui;
 import java.util.ArrayList;
 
-public class Main {
+public class RPP{
    
       public static void main(String[] args) {
-    
-        Window m = new Window();
+        
+        Gui m = new Gui();
         
     }
 

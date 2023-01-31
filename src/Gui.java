@@ -1,5 +1,6 @@
-import java.util.*;
+package src;
 
+import java.util.*;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;      
@@ -8,13 +9,13 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 
-public class Window extends JFrame implements MouseListener{
+public class Gui extends JFrame implements MouseListener{
 
     
-    Window(){
+    public Gui(){
         
         addMouseListener(this);
-        actual = "Poligono ";
+        actual = "Polygon ";
         estado= iesimo = 0 ; 
         color = Color.BLACK;
         setBounds(0,0,1900,1000);
@@ -22,7 +23,7 @@ public class Window extends JFrame implements MouseListener{
         tbxDimX = new JTextField();
         tbxDimY = new JTextField();
         botonBorrar =new JButton();
-        botonBorrar.setText("Borrar");
+        botonBorrar.setText("Clear");
         botonBorrar.addActionListener(new java.awt.event.ActionListener()
         {             public void actionPerformed(java.awt.event.ActionEvent evt) {
             botonBorrarActionPerformed(evt);
@@ -59,8 +60,8 @@ public class Window extends JFrame implements MouseListener{
         spinner.setValue(4);
 
         JPanel aux = new JPanel();
-        JLabel asistente = new JLabel("Hola! Dibuja algo!");
-        JButton botonGuardar = new JButton("Guardar");
+        JLabel asistente = new JLabel("Hiya! Draw something!");
+        JButton botonGuardar = new JButton("Save");
         botonGuardar.addActionListener(new java.awt.event.ActionListener()
         {             public void actionPerformed(java.awt.event.ActionEvent evt) {
             botonGuardaraAction();
@@ -76,7 +77,7 @@ public class Window extends JFrame implements MouseListener{
         
         JPanel panelEstilo  = new JPanel(new GridLayout(2, 2, 15, 5));
         panelEstilo.setBackground(Color.white);
-        continuo = new JRadioButton("Continuo", true );
+        continuo = new JRadioButton("Continuous", true );
         continuo.addItemListener(new ItemListener(){ 
             
             public void itemStateChanged(ItemEvent e) {
@@ -86,7 +87,7 @@ public class Window extends JFrame implements MouseListener{
         }
         );
             
-    segmentado = new JRadioButton("Segmentado", false );
+    segmentado = new JRadioButton("Segmented", false );
    segmentado.addItemListener(new ItemListener(){ 
 
     public void itemStateChanged(ItemEvent e) {
@@ -105,36 +106,36 @@ public class Window extends JFrame implements MouseListener{
 
 panelEstilo.add(continuo , BorderLayout.NORTH);
 panelEstilo.add(segmentado, BorderLayout.NORTH);
-panelEstilo.add(new JLabel("Grosor de linea"));
+panelEstilo.add(new JLabel("Line thickness"));
 panelEstilo.add(spinner);
 
 panelEstilo.setBorder(
-    BorderFactory.createTitledBorder("Estilo de la linea"));
+    BorderFactory.createTitledBorder("Line style"));
     
     
      panelBotones = new JPanel(new GridLayout(2,1, 5, 4));
      panelBotones.setBackground(Color.white);
 
     panelBotones.setBorder(
-        BorderFactory.createTitledBorder("Poligonos"));
+        BorderFactory.createTitledBorder("Polygons"));
         
         JPanel editar = new JPanel(new GridLayout(1, 2,4, 10));
         editar.setBackground(Color.white);
 
         editar.setBorder(
-            BorderFactory.createTitledBorder("Editar"));
+            BorderFactory.createTitledBorder("Edit"));
             editar.add(sliderX);
             editar.add(sliderY);
             
             JPanel panelColores = new JPanel(new GridLayout(2, 6, 5, 5)); 
             panelColores.setBorder(
-                BorderFactory.createTitledBorder("Ecoja un color"));
+                BorderFactory.createTitledBorder("Choose a color"));
     JPanel panelDatos = new JPanel(new GridLayout(2, 1, 5, 5)); 
         panelDatos.setBackground(Color.white);
         
     panelDatos.setBorder(
                     
-BorderFactory.createTitledBorder("Datos"));
+BorderFactory.createTitledBorder("Values"));
 JPanel pDatos = new JPanel(new GridLayout(1,4 , 5 ,1 ));
 pDatos.add(new JLabel("X: "));
 pDatos.add(tbxDimX);
@@ -147,9 +148,9 @@ nombre.setBounds(0,0 , 50,10);
 lados = new JTextField("2");
 lados.setBounds(0,0 , 50,10);
 
-ppDatos.add(new JLabel("Nombre:"));
+ppDatos.add(new JLabel("Name:"));
 ppDatos.add(nombre);
-ppDatos.add(new JLabel("Lados:"));
+ppDatos.add(new JLabel("Sides:"));
 ppDatos.add(lados);
 
 panelDatos.add(ppDatos );
@@ -166,14 +167,14 @@ p.add(panelDatos);
 p.setBackground(Color.white);
 
 p.setBorder(
-    BorderFactory.createTitledBorder(" Dibuje una linea "));
+    BorderFactory.createTitledBorder(" Draw a line "));
     p.setOpaque(true);
     p.setBackground(Color.WHITE);
     JPanel panelPoligonos = new JPanel();
     panelColores.setBackground(Color.white);
     
     panelColores.setBorder(
-        BorderFactory.createTitledBorder("Ecoja un color"));
+        BorderFactory.createTitledBorder("Choose a color "));
         Color [] colores = 
         {Color.BLACK,Color.RED,Color.YELLOW,Color.BLUE,Color.WHITE,Color.ORANGE,Color.GREEN,Color.PINK};    
         for(Color c : colores){
@@ -207,7 +208,7 @@ p.setBorder(
         JPanel pane = new JPanel(new GridLayout(1,2,5,5));
         JTextField archivo = new JTextField();
         archivo.setSize( 500 ,50 );
-        JButton boton = new JButton("Guardar");
+        JButton boton = new JButton("Save");
         boton.addActionListener(new java.awt.event.ActionListener()
         {             public void actionPerformed(java.awt.event.ActionEvent evt) {
             guardarArchivo(archivo.getText());
@@ -228,11 +229,11 @@ p.setBorder(
     
     private void guardarArchivo(String texto) {
 
-        File outputfile = new File( texto + ".png");
+        File outputfile = new File("saves/" + texto + ".png");
         try{
-        ImageIO.write(panel.getImage(), "png", outputfile);
+            ImageIO.write(panel.getImage(), "png", outputfile);
         }catch(Exception e ){}
-        f.dispose();
+            f.dispose();
 
     }
 
@@ -248,7 +249,6 @@ p.setBorder(
     
         
     public void mouseClicked(MouseEvent e) {  
-      System.out.println("clicked ");
     }
     
     
@@ -264,12 +264,22 @@ p.setBorder(
         punto2 = new Punto(e.getX(), e.getY()-130);
 
         if(punto1.distanciaCon(punto2) >= 2 ){
-        System.out.println(punto2);
-
+        
+        int lad = 2 ; 
+        try{
+            lad = Integer.parseInt(lados.getText());
+        }
+        catch (NumberFormatException ex){
+            lados.setText("Insert a number");
+        }
+        if( lad  <= 1)
+        {   
+            lados.setText("2");
+        }
         Poligono  p  = new Poligono(
             punto1.puntoMedio(punto2),
             punto1, 
-           Integer.parseInt(lados.getText()),
+           lad,
             color , 
             (int)spinner.getValue(),
             segmentado.isSelected()
@@ -285,12 +295,8 @@ p.setBorder(
  
 
     public void mousePressed(MouseEvent e) {
-        
-        System.out.println("hold");
-        
         punto1 = new Punto(e.getX(), e.getY()-130);
-        punto3 = punto1; 
-        System.out.println(punto1);
+        punto3 = punto1;
     }
       
     
@@ -338,41 +344,35 @@ p.setBorder(
         panel.add(tra);
         panel.add(esc);
         panel.add(rot);
-      //  panel.add(eli);
         panel.setBounds(0,0,250,400);
 
         return jp;
     }
 
     
-    public void trasladar (String nombre , Punto nuevoCentro ){
-        
+    public void trasladar (String nombre , Punto nuevoCentro ){     
         panel.trasladarPoligono(nombre, nuevoCentro);
         panel.graficarPoligonos();
     }
  
 
-    public void rotar(String nombre , int angulo ){
-        
+    public void rotar(String nombre , int angulo ){  
         panel.rotarPoligono(nombre, angulo );
         panel.graficarPoligonos();
     }
  
 
-    public void escalar(String nombre , int factor ){
-        
+    public void escalar(String nombre , int factor ){    
         panel.escalarPoligono(nombre, factor);
         panel.graficarPoligonos();
     }
  
  
     public void eliminar(String nombre ){
-        
         panel.eliminarPoligono(nombre);
         panelBotones.remove(Integer.parseInt(nombre.split(" ")[1]));
         panelBotones.repaint();
         panel.graficarPoligonos();
-
     }
 
 
