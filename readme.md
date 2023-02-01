@@ -7,8 +7,6 @@ Made for learning regular polygons while having fun drawing.
 Also allows to save your drawing.   
 
 
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
-
 ## How to run
 
 Clone the project
@@ -55,3 +53,8 @@ Then execute using java
 - There you have it! Your drawing in a lovely png file. 
 
 ![Logo](readme_pictures/sketch.png)
+
+
+# License
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
